@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <title>Editor</title>
+  {% include 'parciais/head.html'%}
+</head>
+
+{% include 'parciais/navbar.html'%}
+
+<form method="post" class="m-3">
+  <div class="publico-content">
+
+    <div class="row">
+      {% csrf_token %}
+      <div class="form-group col-md-12">
+        <label for="texto_normativo titulo">Texto Normativo</label>
+        <textarea class="form-control" rows="9" id="texto_normativo" name="texto_normativo">{{ ato.texto_normativo|safe }}</textarea>
+      </div>
+      <div class="form-group col-md-12">
+        <label for="ementa">Ementa</label>
+        <textarea class="form-control" rows="7" id="ementa" name="ementa">{{ ato.ementa }}</textarea>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="numero">Número</label>
+        <input type="text" class="form-control" id="numero" name="numero" value="{{ ato.numero }}">
+      </div>
+
+     <!-- ... -->
+     <div class="form-group col-md-3">
+      <label for="autoridade1">Autoridade 1</label>
+      <select class="form-control" id="autoridade1" name="autoridade1">
+        <option value= "{{ ato.autoridade1 }}">Selecione uma opção</option>
+        <option value="REITOR" {% if ato.autoridade1 == "REITOR" %}selected{% endif %}>REITOR</option>
+        <option value="REITOR EM EXERCÍCÍCIO" {% if ato.autoridade1 == "REITOR EM EXERCÍCÍCIO" %}selected{% endif %}>REITOR EM EXERCÍCÍCIO</option>
+        <option value="PRO-REITOR" {% if ato.autoridade1 == "PRO-REITOR" %}selected{% endif %}>PRO-REITOR</option>
+        <option value="PRO-REITOR EM EXERCÍCIO" {% if ato.autoridade1 == "PRO-REITOR EM EXERCÍCIO" %}selected{% endif %}>PRO-REITOR EM EXERCÍCÍCIO</option>
+        <option value="VICE-REITOR" {% if ato.autoridade1 == "VICE-REITOR" %}selected{% endif %}>VICE-REITOR</option>
+        <option value="VICE-REITOR EM EXERCÍCÍCIO" {% if ato.autoridade1 == "VICE-REITOR EM EXERCÍCÍCIO" %}selected{% endif %}>VICE-REITOR EM EXERCÍCÍCIO</option>
+        <option value="PRESIDENTE DA CÂMARA" {% if ato.autoridade1 == "PRESIDENTE DA CÂMARA" %}selected{% endif %}>PRESIDENTE DA CÂMARA</option>
+      </select>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="autoridade2">Autoridade 2</label>
+      <select class="form-control" id="autoridade2" name="autoridade2">
+        <option value= "{{ ato.autoridade2 }}">Selecione uma opção</option>
+        <option value="REITOR" {% if ato.autoridade2 == "REITOR" %}selected{% endif %}>REITOR</option>
+        <option value="REITOR EM EXERCÍCÍCIO" {% if ato.autoridade2 == "REITOR EM EXERCÍCÍCIO" %}selected{% endif %}>REITOR EM EXERCÍCÍCIO</option>
+        <option value="PRO-REITOR" {% if ato.autoridade2 == "PRO-REITOR" %}selected{% endif %}>PRO-REITOR</option>
+        <option value="PRO-REITOR EM EXERCÍCIO" {% if ato.autoridade2 == "PRO-REITOR EM EXERCÍCIO" %}selected{% endif %}>PRO-REITOR EM EXERCÍCÍCIO</option>
+        <option value="VICE-REITOR" {% if ato.autoridade2 == "VICE-REITOR" %}selected{% endif %}>VICE-REITOR</option>
+        <option value="VICE-REITOR EM EXERCÍCÍCIO" {% if ato.autoridade2 == "VICE-REITOR EM EXERCÍCÍCIO" %}selected{% endif %}>VICE-REITOR EM EXERCÍCÍCIO</option>
+        <option value="PRESIDENTE DA CÂMARA" {% if ato.autoridade2 == "PRESIDENTE DA CÂMARA" %}selected{% endif %}>PRESIDENTE DA CÂMARA</option>
+      </select>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="cargoDaAutoridadePrimaria">Assinante 1</label>
+      <select class="form-control" id="cargoDaAutoridadePrimaria" name="assinante1">
+        {% for assinante in assinantes %}
+          <option value="{{ assinante.id }}" {% if assinante.id == ato.assinante1_id %}selected{% endif %}>{{ assinante.nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+      <div class="form-group col-md-3">
+        <label for="tipoAto">tipo_ato</label>
+        <select class="form-control" id="tipoAto" name="tipo_ato">
+          <option value="portaria" {% if ato.tipo_ato == "portaria" %}selected{% endif %}>Portaria</option>
+          <option value="Resolução" {% if ato.tipo_ato == "Resolução" %}selected{% endif %}>Resolução</option>
+        </select>
+      </div>
+
+      <div class="form-group col-md-3">
+        <label for="cargoDaAutoridadeSecundaria">Assinante 2</label>
+        <select class="form-control" id="cargoDaAutoridadeSecundaria" name="assinante2">
+          <option value="" {% if not ato.assinante2 %}selected{% endif %}>Nenhuma</option>
+          {% for assinante in assinantes %}
+            <option value="{{ assinante.id }}" {% if assinante.id == ato.assinante2.id %}selected{% endif %}>{{ assinante.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+
+        <div class="form-group col-md-3">
+               {% if ato.status == 'PENDENTE' %}
+               <!-- Neste caso, adicionamos um input hidden com o valor 'revisao' para manter o valor -->
+               <input type="hidden" name="status" value="revisao">
+               {% else %}
+               <label for="status">Status</label>
+               <select class="form-control" id="status" name="status">
+                  <option value="PENDENTE" {% if ato.status == 'PENDENTE' %}selected{% endif %}>Pendente</option>
+                  <option value="aprovado" {% if ato.status == 'aprovado' %}selected{% endif %}>Aprovado</option>
+                  <option value="revisao" {% if ato.status == 'revisao' %}selected{% endif %}>Revisão</option>
+                  <option value="cancelado" {% if ato.status == 'cancelado' %}selected{% endif %}>Cancelado</option>
+                  <!-- Adicione outras opções conforme necessário -->
+               </select>
+               {% endif %}
+            </div>
+            <!-- Adicione este bloco para a caixa de texto de pendência -->
+            <div class="form-group col-md-12" id="caixa_pendente" {% if ato.status != 'PENDENTE' %}style="display: none;"{% endif %}>
+               <label for="pendente">O que está pendente?</label>
+               <textarea class="form-control" rows="3" id="pendente" name="pendente" placeholder="Escreva o que está pendente">{{ ato.pendestes_texto }}</textarea>
+            </div>
+            <!-- Botão de atualizar -->
+            <div class="form-group col-md-12">
+               <button type="submit" name="atualizar" class="btn btn-primary m-2">Atualizar</button>
+            </div>
+         </div>
+      </div>
+   </form>
+   <!-- Adicione o seguinte bloco de script -->
+   <script>
+      // Função para mostrar ou ocultar a caixa de texto de pendência
+      function mostrarOcultarCaixaPendente() {
+         var statusElement = document.getElementById("status");
+         var caixaPendenteElement = document.getElementById("caixa_pendente");
+
+         // Se a opção selecionada for 'PENDENTE', mostra a caixa de texto, caso contrário, oculta.
+         if (statusElement.value === 'PENDENTE') {
+            caixaPendenteElement.style.display = "block";
+         } else {
+            caixaPendenteElement.style.display = "none";
+         }
+      }
+
+      // Executa a função quando o valor do campo 'Status' é alterado.
+      document.getElementById("status").addEventListener("change", mostrarOcultarCaixaPendente);
+
+      // Executa a função no carregamento inicial da página.
+      mostrarOcultarCaixaPendente();
+   </script>
+   {% include 'parciais/footer.html' %}

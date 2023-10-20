@@ -1,0 +1,43 @@
+{% load static %}
+
+<header>
+    <nav class="navbar navbar-expand-lg  navbar-light ">
+
+        <div class="container-fluid">
+
+
+            <a class="navbar-brand" href="#"><img id="logo" src="{% static 'images/logobrancouea.png' %}"
+                    alt="##"></a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <i class="bi-list"> </i>
+            </button>
+
+            <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarSupportedContent">
+
+                </div>
+            </div>
+        </div>
+    </nav>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Obtém o caminho da página atual
+            var currentPage = window.location.pathname;
+
+            // Obtém todos os links da navbar
+            var navLinks = document.querySelectorAll('.nav-item a');
+
+            // Itera sobre cada link na navbar
+            navLinks.forEach(function (link) {
+                var linkPath = link.getAttribute('href');
+
+                // Verifica se o link corresponde à página atual
+                if (linkPath === currentPage) {
+                    link.classList.add('active'); // Adiciona a classe .active ao link correspondente
+                }
+            });
+        });
+    </script>
+</header>

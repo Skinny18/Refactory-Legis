@@ -1,0 +1,217 @@
+{% load static %}
+
+<body>
+   {% include 'parciais/navbar.html'%}
+
+
+   <div class="publico-content">
+
+   <form action="{% url 'salvar_ato' %}" method="POST">
+      {% csrf_token %}
+         <div class="row gap-1 m-2 h-100">
+            <section class="col-md-6 h-100 rounded">
+               <h5 class="titulo">FORMULÁRIO AVULSO</h5>
+               <div class="card teste " aria-hidden="true">
+                  <div class="card-body placeholder-glow" id="placeholder">
+                     <h5 class="card-title ">
+                        <span class="placeholder col-6 w-4"></span>
+                     </h5>
+                  </div>
+                  <textarea class="formulario_avulso-texteara" rows="27" name="textoNormativo"></textarea>
+               </div>
+            </section>
+            <section class="col-md-5 col-sm-12 rounded" id="formulario_autoridade">
+               <div class="row gap-1">
+                  <h5 class="titulo">Autoridade</h5>
+                  <textarea rows="5" class="form-control" placeholder="Escreva a Ementa!"
+                     name="textoEmenta"></textarea>
+
+                  <select class="form-control select2" name="nomeAutoridadeAssinantePrimaria">
+                     <option value="" selected disabled>Nome da autoridade</option>
+                     {% for autoridade in autoridades %}
+                     <option value="{{ autoridade.id }}">{{ autoridade.nome }}</option>
+                     {% endfor %}
+                  </select>
+                  <select class="form-control select2" name="nomeAutoridadeAssinanteSecundaria">
+                     <option value="" selected disabled>Nome da segunda autoridade</option>
+                     {% for autoridade in autoridades %}
+                     <option value="{{ autoridade.id }}">{{ autoridade.nome }}</option>
+                     {% endfor %}
+                  </select>
+
+                  {% if is_admin %}
+                        <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal" style="background-color: darkslategrey">
+                            Adicionar Autoridade
+                        </button>
+                  {% endif %}
+
+
+
+
+                  <select class="form-control" name="tipoAto" id="tipo_ato">
+                     <option disabled selected>Ato</option>
+                     <option value="portaria">Portaria</option>
+                     <option value="Resolução">Resolução</option>
+                  </select>
+{#                  <select class="form-control" name="acao">#}
+{#                     <option disabled selected>Ação</option>#}
+{#                     <option value="AÇÃO 1">AÇÃO 1</option>#}
+{#                     <option value="AÇÃO 2">AÇÃO 2</option>#}
+{#                     <option value="AÇÃO 3">AÇÃO 3</option>#}
+{#                  </select>#}
+                  <input type="text" class="form-control" placeholder="N°" name="numeroAto">
+{#                  <input type="text" class="form-control" placeholder="Ano" name="anoDePublicacao">#}
+{#                  <input type="text" class="form-control" placeholder="Seção" name="secaoDOE">#}
+{#                  <input type="text" class="form-control" placeholder="N° do Diario" name="numeroDOE">#}
+{#                  <input type="text" class="form-control" placeholder="Página" name="paginaDOE">#}
+                  <select class="form-control" name="cargoDaAutoridadePrimaria">
+                     <option disabled selected>Cargo da primeira autoridade</option>
+                     <option value="REITOR">REITOR</option>
+                     <option value="REITOR EM EXERCÍCIO">REITOR EM EXERCÍCIO</option>
+                     <option value="PRO-REITOR">PRO-REITOR</option>
+                     <option value="PRO-REITOR EM EXERCÍCIO">PRO-REITOR EM EXERCÍCIO</option>
+                     <option value="VICE-REITOR">VICE-REITOR</option>
+                     <option value="VICE-REITOR EM EXERCÍCIO">VICE-REITOR EM EXERCÍCIO</option>
+                     <option value="PRESIDENTE DA CÂMARA">PRESIDENTE DA CÂMARA</option>
+                  </select>
+                  <select class="form-control"name="cargoDaAutoridadeSecundaria">
+                     <option disabled selected>Cargo da segunda autoridade</option>
+                     <option value="REITOR">REITOR</option>
+                     <option value="REITOR EM EXERCÍCIO">REITOR EM EXERCÍCIO</option>
+                     <option value="PRO-REITOR">PRO-REITOR</option>
+                     <option value="PRO-REITOR EM EXERCÍCIO">PRO-REITOR EM EXERCÍCIO</option>
+                     <option value="VICE-REITOR">VICE-REITOR</option>
+                     <option value="VICE-REITOR EM EXERCÍCIO">VICE-REITOR EM EXERCÍCIO</option>
+                     <option value="PRESIDENTE DA CÂMARA">PRESIDENTE DA CÂMARA</option>
+                  </select>
+{#                  <input class="form-control" type="file" id="formFile">#}
+                  <button id="" type="submit" class="btn btn-success float-right">Salvar</button>
+               </div>
+            </section>
+         </div>
+
+      </div>
+
+   </form>
+</div>
+
+   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+      <div class="modal-content">
+         <div class="modal-header">
+            <h1 class="modal-title fs-5" id="exampleModalLabel">Adicionar Autoridade</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+         </div>
+         <div class="modal-body">
+            <form action="{% url 'salvar_autoridade' %}" method="POST">
+               {% csrf_token %}
+               <input type="text" class="form-control" placeholder="Nome Da Autoridade" name="nomeAutoridade">
+               <input type="submit" class="btn btn-primary" value="Salvar">
+            </form>
+
+            <div>
+
+                  <p>
+
+                     <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        Listar Autoridades
+                     </button>
+                   </p>
+                   <div class="collapse" id="collapseExample">
+                     <div class="card card-body">
+                        {% for autoridade in autoridades %}
+
+                        <div class="card w-100" style="width: 18rem;">
+                           <ul class="list-group list-group-flush ">
+                             <li class="list-group-item d-flex justify-content-between">{{ autoridade.nome }}
+                              <a href="{% url 'delete_autoridade' autoridade_id=autoridade.id %}" style="color:red">
+                                 <svg  aria-hidden="true" style="font-size:inherit;height:1em;overflow:visible;vertical-align:-.125em;width:.875em " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><path fill="currentColor" d="M32 464a48 48 0 0048 48h288a48 48 0 0048-48V128H32zm272-256a16 16 0 0132 0v224a16 16 0 01-32 0zm-96 0a16 16 0 0132 0v224a16 16 0 01-32 0zm-96 0a16 16 0 0132 0v224a16 16 0 01-32 0zM432 32H312l-9-19a24 24 0 00-22-13H167a24 24 0 00-22 13l-9 19H16A16 16 0 000 48v32a16 16 0 0016 16h416a16 16 0 0016-16V48a16 16 0 00-16-16z"/></svg>
+
+                              </a>
+                             </li>
+
+                           </ul>
+
+                         </div>
+
+                     {% endfor %}
+                  </div>
+                   </div>
+
+            </div>
+         </div>
+         <div class="modal-footer">
+         </div>
+      </div>
+      </div>
+   </div>
+   <!-- Carregamento inline do JS do Select2 -->
+   <script>
+    // Simula a função do $ do jQuery para selecionar elementos pelo seletor
+    function select(selector) {
+        return document.querySelector(selector);
+    }
+
+    // Função para remover o elemento pelo seletor
+    function removeElement(selector) {
+        const element = select(selector);
+        if (element) {
+            element.parentNode.removeChild(element);
+        }
+    }
+
+    // Função para criar e carregar o CSS inline
+    function loadInlineCSS(css) {
+        const style = document.createElement('style');
+        style.innerHTML = css;
+        document.head.appendChild(style);
+    }
+
+    // Função para criar e carregar o JS inline
+    function loadInlineJS(js) {
+        const script = document.createElement('script');
+        script.innerHTML = js;
+        document.body.appendChild(script);
+    }
+
+    // Espera que a janela seja carregada e, em seguida, executa o código inline
+    window.addEventListener("load", function () {
+        // Remover elemento com ID 'placeholder'
+        removeElement("#placeholder");
+
+        // Carregar CSS inline do Select2
+        loadInlineCSS(`
+            .select2-container--default .select2-selection--single {
+                height: 38px;
+                padding-top: 4px;
+            }
+            .select2-container--default .select2-selection--single .select2-selection__rendered {
+                padding-left: 15px;
+            }
+            .select2-container--default .select2-selection--single .select2-selection__arrow {
+                top: 5px;
+            }
+        `);
+
+        // Carregar JS inline do Select2
+        loadInlineJS(`
+            // Inicializar o plugin Select2 para todos os selects com a classe 'select2'
+            $('.select2').select2({
+                minimumInputLength: 1, // Habilitar pesquisa por digitação
+                placeholder: 'Selecione uma opção', // Mensagem padrão para o campo vazio
+                allowClear: true, // Adicionar botão para limpar a seleção
+                width: '100%', // Definir a largura do campo
+                language: {
+                    noResults: function () {
+                        return 'Nenhum resultado encontrado'; // Mensagem para nenhum resultado encontrado
+                    },
+                    searching: function () {
+                        return 'Pesquisando...'; // Mensagem para pesquisa em andamento
+                    }
+                }
+            });
+        `);
+    });
+</script>
+
+</body>

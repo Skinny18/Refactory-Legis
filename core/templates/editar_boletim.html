@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <title>Editor</title>
+  {% include 'parciais/head.html'%}
+</head>
+
+{% include 'parciais/navbar.html'%}
+
+
+<form method="post" class="m-3">
+  <div class="publico-content">
+      
+        <div class="row">
+      {% csrf_token %}
+      <div class="form-group col-md-12">
+        <label for="conteudo_pdf titulo">Conteudo PDF</label>
+        <textarea class="form-control" rows="9" id="conteudo_pdf" name="conteudo_pdf">{{ ato.conteudo_pdf|safe }}</textarea>
+      </div>
+      <div class="form-group col-md-12">
+        <label for="titulo">Ementa</label>
+        <h1   class="form-control"  rows="7" id="titulo" name="titulo" >{{ ato.titulo }}</h1>
+      </div>
+      
+      
+      <div class="form-group col-md-3">
+        <label for="status">Status</label>
+        <select class="form-control" id="status" name="status">
+          {% for choice in ato.STATUS_CHOICES %}
+            {% if choice.0 == ato.status %}
+              <option value="{{ ato.status }}" selected>{{ ato.status }}</option>
+            {% else %}
+              <option value="{{ choice.0 }}">{{ choice.1 }}</option>
+            {% endif %}
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group col-md-3">
+        <label for="status">Assinantes Boletim</label>
+        <input type="text" value="{{reitor}}" class="form-control" id="reitor" name="reitor" placeholder="Reitor">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="status">Assinantes Boletim</label>
+        <input type="text" value="{{vice_reitor}}" class="form-control" id="vice_reitor" name="vice_reitor" placeholder="Vice-Reitor">
+
+      </div>
+      <div class="form-group col-md-3">
+        <label for="status">Assinantes Boletim</label>
+        <input type="text" value="{{reitor_admin}}" class="form-control" id="reitor_admin" name="reitor_admin" placeholder="Pró-Reitor de Administração">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="status">Assinantes Boletim</label>
+        <input type="text" class="form-control" value="{{reitor_pes_grad}}" id="reitor_pes_grad" name="reitor_pes_grad" placeholder="Pró-Reitor de Pesquisa e Pós-Graduação">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="status">Assinantes Boletim</label>
+        <input type="text" class="form-control" value="{{reitor_ens}}" id="reitor_ens" name="reitor_ens" placeholder="Pró-Reitor de Ensino de Graduação">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="status">Assinantes Boletim</label>
+        <input type="text" class="form-control" value="{{reitor_plan}}"  id="reitor_plan" name="reitor_plan" placeholder="Pró-Reitora de Planejamento">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="status">Assinantes Boletim</label>
+        <input type="text" class="form-control" value="{{reitor_int}}" id="reitor_int" name="reitor_int" placeholder="Pró-Reitor de Interiorização">
+      </div>
+      <div class="form-group col-md-3">
+        <label for="status">Assinantes Boletim</label>
+        <input type="text" class="form-control" value="{{reitor_ext}}" id="reitor_ext" name="reitor_ext" placeholder="Pró-Reitor de Extensão e Assuntos Comunitários">
+      </div>
+
+      <button type="submit" class="btn btn-primary m-2">Atualizar</button>
+      <!-- <input type="submit" name="aprovar_ato" value="Aprovar Ato"> -->
+    </div>
+  </div>
+
+</form>
+
+{% include 'parciais/footer.html'%}

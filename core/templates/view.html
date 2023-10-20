@@ -1,0 +1,55 @@
+{% load static %}
+{% include 'parciais/head.html' %}
+<body>
+   {% include 'parciais/navbar.html'%}
+   <div class="publico-content">
+      <div class="card mt-4">
+         <div class="card-header bg-default ">
+            {% if ato.status != "cancelado" %} {# Verifica se o status não é "cancelado" #}
+
+             <div class="d-flex bd-highlight">
+               <div class="p-2 flex-grow-1 bd-highlight">
+                   <h3 class="mt-3">{{ ato.tipo_ato|upper }} N° {{ ato.numero }}</h3>
+
+               </div>
+
+
+                  {% if is_admin %}
+                     {% if ato.status != "aprovado" %}
+                     <div class="p-2 bd-highlight">
+                     <a href="{% url 'editar_ato' ato_id=ato.id %}" target="_blank" class=" bg-light p-3  text-reset rounded">
+                           <i class="bi bi-pencil-square fa-2x"></i>
+                        </a>
+                         </div>
+
+                     {% endif %}
+                  {% endif %}
+                  <div class="p-2 bd-highlight">
+                     <a href="{% url 'gerar_pdf' ato_ids=ato.id boletim_id=ato.id %}" target="_blank" class="bg-light p-3 text-reset rounded">
+                     <i class="bi bi-download fa-2x"></i>
+                  </a>
+               </div>
+
+               </div>
+            {% endif %}
+         </div>
+         <div class="card-body">
+            <div class="tab-content bg-red-500">
+               <p class="card-title">Assinatura: {{ ato.assinante1 }}</p>
+               <p class="card-title">Autoridade: {{ ato.autoridade1 }}</p>
+{#               <p class="card-title">Data de publicação: {{ ato.dt_publicado }}</p>#}
+               <p class="card-title">Ementa:{{ ato.ementa }}</p>
+               <p class="card-title">Ato: {{ ato.status }}</p>
+               <p class="text-justify"> Texto Normativo:{{ ato.texto_normativo }}</p>
+                <p class="card-title">Criador: {{ ato.criador }} </p>
+                <p class="card-title">Setor: {{ ato.setores_uea }}</p>
+                <p class="card-title" style="font-size: 13px">Autenticidade: {{ ato.ato_hashes.first.pdf_hash }}</p>
+
+               <h3>Pendencias</h3>
+               <p>{{ ato.pendestes_texto }}</p>
+            </div>
+         </div>
+      </div>
+   </div>
+   {% include 'parciais/footer.html'%}
+</body>

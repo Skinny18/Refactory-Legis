@@ -1,0 +1,184 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+  {% include 'parciais/head.html' %}
+
+  <body>
+    {% include 'parciais/navbar.html'%}
+
+    <div class="publico-content">
+      <!-- Para os Atos -->
+      <table class="table table-bordered table-hover">
+        <thead>
+          <form id="filter-form" method="GET" action="{% url 'aprovados'  %}">
+
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">
+                <label for="ato">Ato Normativo</label>
+                <input class="form-control" name="ato" id="ato" type="search" />
+              </th>
+              <th scope="col">
+                <label for="ementa">Ementa</label>
+                <input
+                  class="form-control"
+                  name="ementa"
+                  id="ementa"
+                  type="text"
+                />
+              </th>
+              <th>
+                <label for="autoridade">Autoridade</label>
+                <input
+                  class="form-control"
+                  name="autoridade"
+                  id="autoridade"
+                  type="text"
+                />
+              </th>
+              <th>
+                <label for="assinante">Assinante</label>
+                <input
+                  class="form-control"
+                  name="assinante"
+                  id="assinante"
+                  type="text"
+                />
+              </th>
+              <th>
+                <label for="status">Status</label>
+                <select class="form-control" id="status" name="status">
+                  <option value=""></option>
+                  <option value="aprovado">Aprovado</option>
+                  <option value="pendente">Pendente</option>
+                  <option value="revisao">Revisão</option>
+                  <option value="cancelado">Cancelado</option>
+                </select>
+              </th>
+
+              <th>
+                <p>Ações</p>
+              </th>
+            </tr>
+          </form>
+        </thead>
+
+        {% for ato in atos %}
+
+        <tbody>
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+              <a
+                href="{% url 'view' ato.id %}"
+                class="text-decoration-none text-muted"
+              >
+                {{ ato.tipo_ato|upper }} N° {{ ato.numero }} - D: {{ato.id}}
+              </a>
+            </td>
+            <td>
+              <a
+                href="{% url 'view' ato.id %}"
+                class="text-decoration-none text-muted"
+              >
+                {{ ato.ementa|truncatechars:70}}
+              </a>
+            </td>
+            <td>{{ato.autoridade1}}</td>
+            <td>{{ato.assinante1}}</td>
+            <td>
+              {% if ato.status == 'aprovado' %}
+              <span class="text-success"> {{ato.status|upper}} </span>
+              {% endif %}
+              {% if ato.status == 'revisao' %}
+              <span class="text-warning"> {{ato.status|upper}} </span>
+              {% endif %}
+              {% if ato.status == 'cancelado' %}
+              <span class="text-danger"> {{ato.status|upper}} </span>
+              {% endif %}
+            </td>
+            <td>
+              <div class="d-flex flex-wrap w-100">
+                <a
+                  class="text-dark text-decoration-none"
+                  href="{% url 'view' ato.id %}"
+                  ><i class="bi bi-eye"></i
+                ></a>
+                {% if ato.status == "revisao" %}
+                <a
+                  class="ml-2 text-dark text-decoration-none"
+                  href="{% url 'editar_ato' ato_id=ato.id %}"
+                  ><i class="bi bi-pen"></i
+                ></a>
+                {% endif %}
+              </div>
+            </td>
+          </tr>
+        </tbody>
+
+        {% endfor %} {% for ato in boletim_results %}
+
+        <tbody>
+          <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>
+              <a
+                href="{% url 'view_boletim' ato_ids=ato.portarias_fks %}"
+                class="text-decoration-none text-muted"
+              >
+                {{ ato.titulo|upper }} N° {{ ato.id }}
+              </a>
+            </td>
+            <td>
+              <a
+                href="{% url 'view_publico' ato.id %}"
+                class="text-decoration-none text-muted"
+              >
+                {{ ato.conteudo_pdf|truncatechars:100}}
+              </a>
+            </td>
+          </tr>
+        </tbody>
+        {% endfor %}
+      </table>
+
+      <script>
+        const ato = document.querySelector("#ato");
+        const select = document.querySelector("#status");
+        const autoridade = document.querySelector("#autoridade");
+        const assinante = document.querySelector("#assinante");
+        const ementa = document.querySelector("#ementa");
+        const form = document.querySelector("#filter-form");
+
+        select.addEventListener("change", () => form.submit());
+        ato.addEventListener("change", () => form.submit());
+        autoridade.addEventListener("change", () => form.submit());
+        assinante.addEventListener("change", () => form.submit());
+        ementa.addEventListener("change", () => form.submit());
+
+        const anoSelect = document.querySelector("#ano-select");
+        const portariaSections = document.querySelectorAll(".card-body-ato");
+
+        anoSelect.addEventListener("change", filterSections);
+
+        function filterSections() {
+          const selectedYear = anoSelect.value;
+
+          for (let section of portariaSections) {
+            const sectionYear = section.getAttribute("data-ano");
+
+            if (sectionYear === selectedYear || selectedYear === "") {
+              section.style.display = "block";
+            } else {
+              section.style.display = "none";
+            }
+          }
+        }
+
+        filterSections();
+      </script>
+    </div>
+
+    {% include 'parciais/footer.html'%}
+  </body>
+</html>
