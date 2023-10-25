@@ -11,12 +11,20 @@
       <table class="table table-bordered table-hover">
         <thead>
           <form id="filter-form" method="GET" action="{% url 'aprovados'  %}">
-
             <tr>
               <th scope="col">#</th>
               <th scope="col">
                 <label for="ato">Ato Normativo</label>
-                <input class="form-control" name="ato" id="ato" type="search" />
+
+                <div class="input-group">
+                  <select class="form-control col-auto" name="tipoato" id="tipoato">
+                      <option disabled selected>Tipo Ato</option>
+                      <option value="portaria">Portaria</option>
+                      <option value="Resolução">Resolução</option>
+                      <option value="Boletim">Boletim</option>
+                  </select>
+                  <input class="form-control col-4" id="numero" type="search" name="numero" placeholder="Nº" />
+              </div>
               </th>
               <th scope="col">
                 <label for="ementa">Ementa</label>
@@ -24,7 +32,7 @@
                   class="form-control"
                   name="ementa"
                   id="ementa"
-                  type="text"
+                  type="search"
                 />
               </th>
               <th>
@@ -33,18 +41,10 @@
                   class="form-control"
                   name="autoridade"
                   id="autoridade"
-                  type="text"
+                  type="search"
                 />
               </th>
-              <th>
-                <label for="assinante">Assinante</label>
-                <input
-                  class="form-control"
-                  name="assinante"
-                  id="assinante"
-                  type="text"
-                />
-              </th>
+
               <th>
                 <label for="status">Status</label>
                 <select class="form-control" id="status" name="status">
@@ -85,15 +85,12 @@
               </a>
             </td>
             <td>{{ato.autoridade1}}</td>
-            <td>{{ato.assinante1}}</td>
             <td>
               {% if ato.status == 'aprovado' %}
               <span class="text-success"> {{ato.status|upper}} </span>
-              {% endif %}
-              {% if ato.status == 'revisao' %}
+              {% endif %} {% if ato.status == 'revisao' %}
               <span class="text-warning"> {{ato.status|upper}} </span>
-              {% endif %}
-              {% if ato.status == 'cancelado' %}
+              {% endif %} {% if ato.status == 'cancelado' %}
               <span class="text-danger"> {{ato.status|upper}} </span>
               {% endif %}
             </td>
@@ -143,18 +140,19 @@
       </table>
 
       <script>
-        const ato = document.querySelector("#ato");
+        const ato = document.querySelector("#tipoato");
+        const numero = document.querySelector("#numero");
         const select = document.querySelector("#status");
         const autoridade = document.querySelector("#autoridade");
-        const assinante = document.querySelector("#assinante");
         const ementa = document.querySelector("#ementa");
         const form = document.querySelector("#filter-form");
+        numero.addEventListener("change", () => form.submit());
 
+        ementa.addEventListener("change", () => form.submit());
         select.addEventListener("change", () => form.submit());
         ato.addEventListener("change", () => form.submit());
         autoridade.addEventListener("change", () => form.submit());
         assinante.addEventListener("change", () => form.submit());
-        ementa.addEventListener("change", () => form.submit());
 
         const anoSelect = document.querySelector("#ano-select");
         const portariaSections = document.querySelectorAll(".card-body-ato");

@@ -34,14 +34,17 @@
 					<!-- Collect the nav links, forms, and other content for toggling -->
 					<div class="collapse navbar-collapse offset" id="navbarSupportedContent">
 						<ul class="nav navbar-nav menu_nav ml-auto">
-							<li class="nav-item "><a class="nav-link" href="{% url 'geral' %}">Home</a></li>
+							<li class="nav-item "><a class="nav-link" href="{% url 'geral' %}">Página Inicial</a></li>
 							
 							<li class="nav-item submenu dropdown">
 								<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-								 aria-expanded="false">Autenticar por Hash</a>
+								 aria-expanded="false">Validar Documento</a>
 								<ul class="dropdown-menu">
-                                    <input class="form-control shadow-lg" id="hash" type="search" name="hash" placeholder="Autenticar por HASH">
-                                    <button type='submit' id="filter-hash-button" class=" btn-autenticar btn btn-secondary ">Autenticar</button>
+                                    <form id="form_pesquisa" method="GET" action="{% url 'abrir_pdf' %}" class="">                                  
+                                        <input class="form-control shadow-lg" id="hash" type="search" name="hash" placeholder="Insira a chave Autenticadora">
+                                        <button type='submit' id="filter-hash-button" class=" btn-autenticar btn btn-secondary ">Validar</button>
+                                        </form>
+    
                         </ul>
 							</li>
 							
@@ -54,9 +57,20 @@
 		
        
 	</header>
+    <!-- <div class="search-content">
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" href="#">Portarias/Resolucao</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Boletim</a>
+        </li>
+      
+      </ul>
+    </div> -->
 <div class="publico-content d-flex">
 
-
+  
     
             <div class="row">
                 <div class="col-9">
@@ -84,7 +98,7 @@
                             </td>
                             <td>                    
                                 <a href="{% url 'view_publico' ato.id %}" class="text-decoration-none text-muted">
-                                {{ ato.ementa|truncatechars:100}}
+                                {{ ato.ementa|truncatechars:50}}
                                 </a>
                             </td>
                             
@@ -104,7 +118,7 @@
                     </td>
                     <td>                    
                         <a href="{% url 'view_publico' ato.id %}" class="text-decoration-none text-muted">
-                        {{ ato.conteudo_pdf|truncatechars:100}}
+                        {{ ato.conteudo_pdf|truncatechars:50}}
                         </a>
                     </td>
                     </tr>
@@ -120,25 +134,24 @@
                         </div>
                         <div class="card-body">
                             <div class="d-flex flex-column ">
+                                <form id="filter-form" method="GET" action="{% url 'search_results'  %}">
+                                    <input class="form-control mr-sm-2 mb-2" id="numero" type="search" name="numero" placeholder="Nº Ato">
 
-                                    <input class="form-control mr-sm-2 mb-2" id="filter" type="search" name="texto" placeholder="Nº Ato">
-
-                                    <select class="mb-2" name="tipoAto" id="tipo_ato">
+                                    <select class="mb-2 form-control" name="tipoato" id="tipoato">
                                         <option disabled selected>Tipo Ato</option>
                                         <option value="portaria">Portaria</option>
                                         <option value="Resolução">Resolução</option>
                                         <option value="Boletim">Boletim</option>
                                     </select>
 
-                                    <select class="mb-2" id="ano-select" class="" name="ano">
+                                    <select class="mb-2 form-control" id="ano-select" class="" name="ano-select">
                                         <option value="">Selecione o Ano</option>
                                         {% for ano in anos %}
                                             <option value="{{ano}}">{{ano}}</option>
                                         {% endfor %}
                                     </select>
-
-                                    <input class="form-control mr-sm-2 mb-2" id="filter" type="search" name="texto" placeholder="Assinante">
-                        
+                                    <input class="form-control" id="reset" type="reset">
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -155,8 +168,28 @@
     </div>
         
 </footer>
+<script>
+    const numero = document.querySelector("#numero");
+    const tipoato = document.querySelector("#tipoato");
+    const ano = document.querySelector("#ano-select");
+    const form = document.querySelector("#filter-form");
+    const reset = document.querySelector("#reset");
+    reset.addEventListener("click", function (event) {
+        event.preventDefault();
+
+        numero.value = "";
+        tipoato.value = "";
+        ano.value = "";
+
+        form.submit();
+    });
+
+    tipoato.addEventListener("change", () => form.submit());
+    numero.addEventListener("change", () => form.submit());
+    ano.addEventListener("change", () => form.submit());
 
 </script>
+
 <script src="/static/js/vendor/jquery-2.2.4.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
  crossorigin="anonymous"></script>

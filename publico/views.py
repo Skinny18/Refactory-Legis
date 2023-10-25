@@ -115,7 +115,37 @@ def search_view(request):
     ).all()
 
 
-    return render(request, 'search_results.html', {'results': results, 'query': query, 'boletim_results': boletim_results})
+    anos_unicos = []
+    atos = AtoNormativ.objects.all()
+    for a in atos:
+        ano = a.dt_cadastro.year
+        
+        if ano not in anos_unicos:
+            anos_unicos.append(ano)
+
+    anos_unicos.sort(reverse=True)
+
+    print(anos_unicos)
+    numero = request.GET.get('numero');
+    tipoato = request.GET.get("tipoato");
+    ano = request.GET.get("ano-select");
+
+    filters = []
+
+    if numero:
+        filters.append(Q(numero__icontains=numero) | Q(tipo_ato__isnull=True))
+    if tipoato:
+        filters.append(Q(tipo_ato__icontains=tipoato) | Q(tipo_ato__isnull=True))
+    if ano:
+        q_list = [Q(dt_publicado__year=ano_unico) for ano_unico in anos_unicos]
+        filters.append(Q(*q_list) | Q(autoridade1__isnull=True))
+
+    
+  
+    results = results.filter(*filters)
+
+
+    return render(request, 'search_results.html', {'results': results, 'query': query, 'boletim_results': boletim_results, 'anos':anos_unicos})
 
 # def advanced_filter(request):
     

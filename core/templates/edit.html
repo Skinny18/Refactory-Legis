@@ -8,35 +8,13 @@
 </head>
 
 <body>
-  <div id="grid">
-    <div id="conteudo_core">
+  
 
-      {% include 'parciais/navbar.html'%}
-      {% if messages %}
-
-      <div class="container">
-        <div class="alert alert-primary" role="alert" style="display: block;">
-          {% for message in messages %}
-          {{ message }}
-          {% endfor %}
-        </div>
-      </div>
-
-      <script>
-        setTimeout(function () {
-          document.querySelector('.alert-primary').style.opacity = 0;
-          setTimeout(function () {
-            document.querySelector('.alert-primary').style.display = 'none';
-          }, 500);
-        }, 4000);
-      </script>
-      {% endif %}
+    
 
       {% include 'parciais/criar_ato.html'%}
-    </div>
 
     {% include 'parciais/footer.html'%}
-  </div>
 
 </body>
 

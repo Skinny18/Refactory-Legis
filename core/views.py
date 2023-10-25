@@ -803,61 +803,42 @@ def aprovados(request):
 
     anos_unicos.sort(reverse=True)
 
-    ato = request.GET.get('ato')
+    ato = request.GET.get('tipoato')
+    numero = request.GET.get('numero')
     ementa = request.GET.get('ementa')
     autoridade = request.GET.get('autoridade')
-    assinante = request.GET.get('assinante')
     status = request.GET.get('status')
 
-    results = results.filter(
-        Q(tipo_ato__icontains=ato)|
-        Q(texto_normativo__icontains=ementa)|
-        Q(autoridade1__icontains=autoridade)|
-        Q(assinante1__icontains=assinante)|
-        Q(status=status)
-        )
-    # if ementa:
-    #     results = results.filter()
-    # if autoridade:
-    #     results = results.filter(autoridade1__icontains=autoridade)
-    # if assinante:
-    #     results = results.filter(assinante1__icontains=assinante)
-    # if status:
-    #     results = results.filter(status=status)
-    
-    values = []
+    # results = results.filter(
+    #     Q(tipo_ato__icontains=ato)|
+    #     Q(tipo_ato__isnull=True)|
+    #     Q(texto_normativo__icontains=ementa)|
+    #     Q(texto_normativo__isnull=True)|
+    #     Q(autoridade1__icontains=autoridade)|
+    #     Q(autoridade1__isnull=True)|
+    #     Q(status=status)
+    #     )
+    filters = []
+
+    if ato:
+        filters.append(Q(tipo_ato=ato) | Q(tipo_ato__isnull=True))
+    if ementa:
+        filters.append(Q(texto_normativo__icontains=ementa) | Q(tipo_ato__isnull=True))
+    if autoridade:
+        filters.append(Q(autoridade1__icontains=autoridade) | Q(autoridade1__isnull=True))
+    if status:
+        filters.append(Q(status=status))
+    if numero: 
+        filters.append(Q(numero__icontains=numero) | Q(tipo_ato__isnull=True))
+
+
+    results = results.filter(*filters)
 
     context = {
         'atos': results,
         'anos':anos_unicos,
     }
 
-    return render(request, 'main.html', context)
-
-def filter_url(request):
-    results = AtoNormativ.objects.all()
-    ato = request.GET.get('ato', '')
-    ementa = request.GET.get('ementa', '')
-    autoridade = request.GET.get('autoridade', '')
-    assinante = request.GET.get('assinante', '')
-    status = request.GET.get('status', '')
-    
-    if ato:
-        results = results.filter(ato__icontains=ato)
-    if ementa:
-        results = results.filter(ementa__icontains=ementa)
-    if autoridade:
-        results = results.filter(autoridade1__icontains=autoridade)
-    if assinante:
-        results = results.filter(assinante1__icontains=assinante)
-    if status:
-        results = results.filter(status=status)
-
-
-    context = {
-        'atos': results,
-    }
-    
     return render(request, 'main.html', context)
 
 def boletim(request):

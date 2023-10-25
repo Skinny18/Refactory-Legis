@@ -42,8 +42,10 @@
 								<a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
 								 aria-expanded="false">Validar Documento</a>
 								<ul class="dropdown-menu">
-                                    <input class="form-control shadow-lg" id="hash" type="search" name="hash" placeholder="Validar">
+                                    <form id="form_pesquisa" method="GET" action="{% url 'abrir_pdf' %}" class="">                                  
+                                    <input class="form-control shadow-lg" id="hash" type="search" name="hash" placeholder="Insira a chave Autenticadora">
                                     <button type='submit' id="filter-hash-button" class=" btn-autenticar btn btn-secondary ">Validar</button>
+                                    </form>
                                 </ul>
 							</li>
 							

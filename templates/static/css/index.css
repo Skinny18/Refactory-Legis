@@ -22,11 +22,11 @@ body {
 }
 
 .titulo {
-    background-color: var(--corPrimaria);
+    background-color: #dee2e6;
     text-transform: uppercase;
     border-radius: 8px 8px 0 0;
     padding: 4px;
-    color: #ffffff;
+    color: #22262a;
 }
 
 .card-body-ato {
@@ -172,10 +172,16 @@ input[type=checkbox]
 .publico-content{
     width: 1000px;
     margin: 0 auto;
-    margin-top: 160px;
-    height: 100%;
+    margin-top: 140px;
+    min-height: 100vh;
+    padding-bottom: 40px; /* Altura do rodapé */
 }
 
+.search-content{
+    width: 1000px;
+    margin: 0 auto;
+    margin-top: 160px;
+}
 
 .select-ano{
     display: flex;
