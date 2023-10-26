@@ -12,7 +12,13 @@
         <thead>
           <form id="filter-form" method="GET" action="{% url 'aprovados'  %}">
             <tr>
-              <th scope="col">#</th>
+              <th scope="col">
+                <button class="form-control" id="reset">
+                  <i class="bi bi-arrow-clockwise"></i>
+                </button>
+
+                <!-- <span class="">#</span> -->
+              </th>
               <th scope="col">
                 <label for="ato">Ato Normativo</label>
 
@@ -55,6 +61,15 @@
                   <option value="cancelado">Cancelado</option>
                 </select>
               </th>
+              <th>
+                <select id="ano-select" class="form-control" name="ano">
+                  <option value="">Ano</option>
+                  {% for ano in anos %}
+                      <option value="{{ano}}">{{ano}}</option>
+                      <option value="2022" >2022</option>
+                  {% endfor %}
+              </select>
+              </th>
 
               <th>
                 <p>Ações</p>
@@ -95,6 +110,9 @@
               {% endif %}
             </td>
             <td>
+              {{ato.dt_cadastro.year}}
+            </td>
+            <td>
               <div class="d-flex flex-wrap w-100">
                 <a
                   class="text-dark text-decoration-none"
@@ -113,7 +131,8 @@
           </tr>
         </tbody>
 
-        {% endfor %} {% for ato in boletim_results %}
+        {% endfor %} 
+        {% for ato in boletim %}
 
         <tbody>
           <tr>
@@ -123,10 +142,10 @@
                 href="{% url 'view_boletim' ato_ids=ato.portarias_fks %}"
                 class="text-decoration-none text-muted"
               >
-                {{ ato.titulo|upper }} N° {{ ato.id }}
+                {{ ato.titulo|upper|truncatechars:10 }} N° {{ ato.id }}
               </a>
             </td>
-            <td>
+            <td colspan="2">
               <a
                 href="{% url 'view_publico' ato.id %}"
                 class="text-decoration-none text-muted"
@@ -134,10 +153,60 @@
                 {{ ato.conteudo_pdf|truncatechars:100}}
               </a>
             </td>
+            <td>
+              {% if ato.status == 'aprovado' %}
+              <span class="text-success"> {{ato.status|upper}} </span>
+              {% endif %} {% if ato.status == 'revisao' %}
+              <span class="text-warning"> {{ato.status|upper}} </span>
+              {% endif %} {% if ato.status == 'cancelado' %}
+              <span class="text-danger"> {{ato.status|upper}} </span>
+              {% endif %}
+            </td>
+            <td>
+              {{ato.data_criacao.year}}
+            </td>
+            <td>
+              <div class="d-flex flex-wrap w-100">
+                <a
+                  class="text-dark text-decoration-none"
+                  href="{% url 'view' ato.id %}"
+                  ><i class="bi bi-eye"></i
+                ></a>
+                {% if ato.status == "revisao" %}
+                <a
+                  class="ml-2 text-dark text-decoration-none"
+                  href="{% url 'editar_ato' ato_id=ato.id %}"
+                  ><i class="bi bi-pen"></i
+                ></a>
+                {% endif %}
+              </div>
+            </td>
           </tr>
         </tbody>
         {% endfor %}
       </table>
+        {% if atos.has_other_pages %}
+        <ul class="pagination   d-flex justify-content-center align-items-center">
+          {% if atos.has_previous %}
+          <li class="page-item p-1"><a class="text-dark" href="?page_atos={{ atos.previous_page_number }}"> &laquo;</a></li>
+        
+          {% endif %}
+          {% for num in atos.paginator.page_range %}
+          {% if atos.number == num %}
+          <li class="page-item p-1"><span class="">{{ num }} <span
+                class="sr-only">(current)</span></span></li>
+          {% elif num > atos.number|add:'-3' and num < atos.number|add:'3' %}
+          <li class="page-item p-1"><a class="text-dark" href="?page_atos={{ num }}">{{ num }}</a></li>
+          {% endif %}
+          {% endfor %}
+          {% if atos.has_next %}
+          <li class="page-item p-1"><a class="text-dark" href="?page_atos={{ atos.next_page_number }}">&raquo;</a></li>
+          
+          {% endif %}
+        </ul>
+        {% endif %}
+      
+    
 
       <script>
         const ato = document.querySelector("#tipoato");
@@ -145,35 +214,26 @@
         const select = document.querySelector("#status");
         const autoridade = document.querySelector("#autoridade");
         const ementa = document.querySelector("#ementa");
+        const ano = document.querySelector("#ano-select")
         const form = document.querySelector("#filter-form");
-        numero.addEventListener("change", () => form.submit());
 
+        numero.addEventListener("change", () => form.submit());
+        ano.addEventListener("change", () => form.submit());
         ementa.addEventListener("change", () => form.submit());
         select.addEventListener("change", () => form.submit());
         ato.addEventListener("change", () => form.submit());
         autoridade.addEventListener("change", () => form.submit());
         assinante.addEventListener("change", () => form.submit());
+        const reset = document.querySelector("#reset");
+        reset.addEventListener("click", function (event) {
+            event.preventDefault();
 
-        const anoSelect = document.querySelector("#ano-select");
-        const portariaSections = document.querySelectorAll(".card-body-ato");
+            numero.value = "";
+            tipoato.value = "";
+            ano.value = "";
 
-        anoSelect.addEventListener("change", filterSections);
-
-        function filterSections() {
-          const selectedYear = anoSelect.value;
-
-          for (let section of portariaSections) {
-            const sectionYear = section.getAttribute("data-ano");
-
-            if (sectionYear === selectedYear || selectedYear === "") {
-              section.style.display = "block";
-            } else {
-              section.style.display = "none";
-            }
-          }
-        }
-
-        filterSections();
+            form.submit();
+        });
       </script>
     </div>
 

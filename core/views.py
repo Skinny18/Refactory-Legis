@@ -788,9 +788,9 @@ def aprovados(request):
 
    
     # Cria o paginator para os atos aprovados
-    paginator_atos = Paginator(results, 10)
-    page_number_atos = request.GET.get('page_atos')
-    atos_page = paginator_atos.get_page(page_number_atos)
+    # paginator_atos = Paginator(results, 10)
+    # page_number_atos = request.GET.get('page_atos')
+    # atos_page = paginator_atos.get_page(page_number_atos)
 
 
     anos_unicos = []
@@ -808,7 +808,7 @@ def aprovados(request):
     ementa = request.GET.get('ementa')
     autoridade = request.GET.get('autoridade')
     status = request.GET.get('status')
-
+    ano = request.GET.get('ano')
     # results = results.filter(
     #     Q(tipo_ato__icontains=ato)|
     #     Q(tipo_ato__isnull=True)|
@@ -819,24 +819,35 @@ def aprovados(request):
     #     Q(status=status)
     #     )
     filters = []
-
+    b_filter = []
     if ato:
         filters.append(Q(tipo_ato=ato) | Q(tipo_ato__isnull=True))
     if ementa:
         filters.append(Q(texto_normativo__icontains=ementa) | Q(tipo_ato__isnull=True))
+        b_filter.append(Q(conteudo_pdf__icontains=ementa) | Q(conteudo_pdf__isnull=True))
     if autoridade:
         filters.append(Q(autoridade1__icontains=autoridade) | Q(autoridade1__isnull=True))
     if status:
         filters.append(Q(status=status))
+        b_filter.append(Q(status=status))
     if numero: 
         filters.append(Q(numero__icontains=numero) | Q(tipo_ato__isnull=True))
+    # if ano:
+        # filters.append(Q(dt_cadastro=ano))
+        # b_filter.append(Q(data_criacao=ano))
 
 
     results = results.filter(*filters)
+    r_boletim = BoletimGerado.objects.filter(*b_filter)
+
+    paginator = Paginator(results, 15)
+    page = request.GET.get('page_atos')
+    results = paginator.get_page(page)
 
     context = {
         'atos': results,
         'anos':anos_unicos,
+        'boletim': r_boletim,
     }
 
     return render(request, 'main.html', context)

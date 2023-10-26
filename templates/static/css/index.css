@@ -95,25 +95,15 @@ body {
     background-color: #29161a !important;
 } */
 
-.page-item.active .page-link {
+.page-item.active  {
     color: #fafafa;
     background-color: var(--corPrimaria);
-    border-color: var(--corPrimaria);
 }
 
-.page-link {
-    color: #000000;
-    background-color: #fff;
-    border: 1px solid #dee2e6;
-}
 
-.page-link:hover {
-    background-color: #ffffff;
-}
 
-.page-link:hover {
-    color: #006221;
-    /* Defina a cor desejada para o hover */
+.page-item:hover {
+    color: #707070;
 }
 .messages {
     transition: opacity 1s ease;

@@ -11,7 +11,7 @@
             <p id="contador-paragrafo" class="text-center" style="display: none;">Portarias selecionadas: <span
                     id="contador">0</span></p>
             {% with ato=atos.0 %}
-            <a href="{% url 'revisao' %}" id="botao" style="display: none;" target="_blank"
+            <a href="{% url 'revisao' %}" id="botao" style="display: none;" target=""
                 class="w-25 bg-light text-center p-2 text-reset  rounded  ">
                 <i class="bi bi-download fa-2x"></i>
             </a>
@@ -24,7 +24,7 @@
             <div class="mb-2 card card-body" data-ano="{{ ato.dt_cadastro|date:'Y' }}">
                 <div class="d-flex justify-content-between align-items-center">
                     <a href="{% url 'view' ato.id %}" class="card-title text-decoration-none">
-                        <h5 class="card-title">{{ ato.tipo_ato|upper }}</h5>
+                        <h5 class="card-title">{{ ato.tipo_ato|upper }} N° {{ato.numero}}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">{{ ato.assinante1 }} / {{ ato.autoridade1 }}
                             / {{ato.dt_cadastro }} </h6>
                         <p class="card-text">{{ ato.ementa|truncatechars:100}}</p>
