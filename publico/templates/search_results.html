@@ -169,6 +169,25 @@
         
 </footer>
 <script>
+//         window.addEventListener("load", function () {
+//     if (localStorage.getItem("numero")) {
+//         numero.value = localStorage.getItem("numero");
+//     }
+//     if (localStorage.getItem("tipoato")) {
+//         tipoato.value = localStorage.getItem("tipoato");
+//     }
+//     if (localStorage.getItem("ano-select")) {
+//         ano.value = localStorage.getItem("ano-select");
+//     }
+// });
+
+// // Ouça o evento de envio do formulário
+// form.addEventListener("submit", function () {
+//     // Salve os valores dos campos no local storage antes de enviar o formulário
+//     localStorage.setItem("numero", numero.value);
+//     localStorage.setItem("tipoato", tipoato.value);
+//     localStorage.setItem("ano-select", ano.value);
+// });
     const numero = document.querySelector("#numero");
     const tipoato = document.querySelector("#tipoato");
     const ano = document.querySelector("#ano-select");
@@ -187,7 +206,8 @@
     tipoato.addEventListener("change", () => form.submit());
     numero.addEventListener("change", () => form.submit());
     ano.addEventListener("change", () => form.submit());
-
+    
+   
 </script>
 
 <script src="/static/js/vendor/jquery-2.2.4.min.js"></script>
